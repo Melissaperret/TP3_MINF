@@ -14,6 +14,7 @@
 // Initialisation du menu et des paramètres
 void MENU_Initialize(S_ParamGen *pParam)
 {
+    
 }
 
 

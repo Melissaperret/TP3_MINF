@@ -11,15 +11,42 @@
 #include "Generateur.h"
 #include "DefMenuGen.h"
 #include "Mc32gestSpiDac.h"
+#include "Mc32NVMUtil.h"
+#include "Mc32DriverLcd.h"
 
 // T.P. 2016 100 echantillons
 #define MAX_ECH 100
+#define VAL_MAX 65535
+#define VAL_ECH 32767
+
+S_ParamGen valeursParamGem;
+
 
 
 
 // Initialisation du  générateur
 void  GENSIG_Initialize(S_ParamGen *pParam)
 {
+    //Röcupération des données sauvegardées au démarrage précédant
+    NVM_ReadBlock(uint32_t valeursParamGem, sizeof(S_ParamGen));
+    
+    //Test pour vérifier si 
+    if(valeursParamGem->Magic == MAGIC)
+    {
+        *pParam = valeursParamGem;
+    }
+    else 
+    {
+        lcd_gotoxy(1,4);
+        printf_lcd("Donnees par defaut");
+        
+        valeursParamGem->Amplitude = 0;    
+        valeursParamGem->Forme = SignalCarre; 
+        valeursParamGem->Frequence = 20;
+        valeursParamGem->Magic = MAGIC;
+        valeursParamGem->Offset = 0;
+    }
+        GENSIG_UpdatePeriode(&valeursParamGem);
 }
   
 
@@ -31,6 +58,32 @@ void  GENSIG_UpdatePeriode(S_ParamGen *pParam)
 // Mise à jour du signal (forme, amplitude, offset)
 void  GENSIG_UpdateSignal(S_ParamGen *pParam)
 {
+    switch(valeursParamGem.Forme)
+    {
+        case SignalSinus:
+
+            break; 
+            
+        case SignalTriangle:
+            
+            break ; 
+            
+            
+        case SignalDentDeScie:
+            
+            break; 
+            
+            
+        case SignalCarre: 
+            
+            break; 
+            
+        default:
+            break;
+        
+        
+        
+    }
    
    
 }

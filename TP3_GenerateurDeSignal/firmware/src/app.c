@@ -181,8 +181,7 @@ void APP_Tasks ( void )
         break;
 
        case APP_STATE_SERVICE_TASKS:
-            BSP_LEDToggle(BSP_LED_2);
-
+           
             // Execution du menu
             MENU_Execute(&LocalParamGen);
             appData.state = APP_STATE_WAIT;
