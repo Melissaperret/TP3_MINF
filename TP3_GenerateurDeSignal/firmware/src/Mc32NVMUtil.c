@@ -21,6 +21,7 @@
 #include "Mc32NVMUtil.h"
 #include "peripheral\NVM\plib_nvm.h"
 #include <sys/kmem.h>
+#include <stdbool.h>
 
 
 // Row dans flash pour data
