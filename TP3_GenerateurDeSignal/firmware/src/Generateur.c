@@ -21,6 +21,13 @@
 
 S_ParamGen valeursParamGem;
 
+uint16_t nombreTic = 0; 
+uint16_t amplitudeMin; 
+uint16_t amplitudeMax; 
+uint16_t nombreEch; 
+uint16_t nombreEch; 
+
+
 
 
 
