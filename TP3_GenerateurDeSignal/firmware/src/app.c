@@ -149,6 +149,13 @@ void APP_Tasks ( void )
             lcd_init();
             lcd_bl_on();
 
+            lcd_gotoxy(1,1);
+            printf_lcd("TP3 GenSig 23-24");
+            lcd_gotoxy(1,2); 
+            printf_lcd("Melissa Perret");
+            lcd_gotoxy(1,3); 
+            printf_lcd("Jeremy Affolter");
+            
             // Init SPI DAC
             SPI_InitLTC2604();
 
@@ -159,14 +166,8 @@ void APP_Tasks ( void )
             MENU_Initialize(&LocalParamGen);
 
             // Initialisation du generateur
-            GENSIG_Initialize(&LocalParamGen);
-            
-            printf_lcd("TP3 GenSig 23-24");
-            lcd_gotoxy(1,2); 
-            printf_lcd("Melissa Perret");
-            lcd_gotoxy(1,3); 
-            printf_lcd("Jeremy Affolter");
-
+            GENSIG_Initialize(&LocalParamGen);           
+          
             // Active les timers 
             DRV_TMR0_Start();
             DRV_TMR1_Start();
