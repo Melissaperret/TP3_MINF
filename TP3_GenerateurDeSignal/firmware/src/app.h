@@ -59,7 +59,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdlib.h>
 #include "system_config.h"
 #include "system_definitions.h"
-
 #include "DefMenuGen.h"     // paramètres du génerateur
 
 // *****************************************************************************
@@ -83,8 +82,8 @@ typedef enum
 {
 	/* Application's state machine's initial state. */
 	APP_STATE_INIT=0,
-        APP_STATE_WAIT=1,
-        APP_STATE_SERVICE_TASKS=2
+    APP_STATE_WAIT=1,
+    APP_STATE_SERVICE_TASKS=2
 	
 } APP_STATES;
 

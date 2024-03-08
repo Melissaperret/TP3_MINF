@@ -26,6 +26,15 @@
             <itemPath>../src/system_config/default/system_definitions.h</itemPath>
           </logicalFolder>
         </logicalFolder>
+        <itemPath>../src/app.h</itemPath>
+        <itemPath>../src/DefMenuGen.h</itemPath>
+        <itemPath>../src/Generateur.h</itemPath>
+        <itemPath>../src/GesPec12.h</itemPath>
+        <itemPath>../src/Mc32Debounce.h</itemPath>
+        <itemPath>../src/Mc32gestSpiDac.h</itemPath>
+        <itemPath>../src/Mc32NVMUtil.h</itemPath>
+        <itemPath>../src/Mc32SpiUtil.h</itemPath>
+        <itemPath>../src/MenuGen.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="bsp" projectFiles="true">
         <logicalFolder name="f1" displayName="pic32mx_skes" projectFiles="true">
@@ -85,15 +94,6 @@
           <itemPath>../../../../../../../framework/system/system.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../src/DefMenuGen.h</itemPath>
-      <itemPath>../src/Generateur.h</itemPath>
-      <itemPath>../src/GesPec12.h</itemPath>
-      <itemPath>../src/Mc32Debounce.h</itemPath>
-      <itemPath>../src/Mc32NVMUtil.h</itemPath>
-      <itemPath>../src/Mc32SpiUtil.h</itemPath>
-      <itemPath>../src/Mc32gestSpiDac.h</itemPath>
-      <itemPath>../src/MenuGen.h</itemPath>
-      <itemPath>../src/app.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -227,7 +227,7 @@
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
       </makeCustomizationType>
       <C32>
-        <property key="additional-warnings" value="false"/>
+        <property key="additional-warnings" value="true"/>
         <property key="addresss-attribute-use" value="false"/>
         <property key="enable-app-io" value="false"/>
         <property key="enable-omit-frame-pointer" value="false"/>

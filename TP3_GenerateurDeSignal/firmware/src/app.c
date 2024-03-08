@@ -54,8 +54,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 
 #include "app.h"
-#include "Mc32DriverLcd.h"
 #include "Mc32gestSpiDac.h"
+#include "MC32DriverLcd.h"
 #include "MenuGen.h"
 #include "GesPec12.h"
 #include "Generateur.h"
@@ -171,9 +171,12 @@ void APP_Tasks ( void )
             DRV_TMR0_Start();
             DRV_TMR1_Start();
             
+            // Initialisation du Pec12
+            Pec12Init();
+            
             GENSIG_UpdateSignal(&LocalParamGen);
             
-            appData.state = APP_STATE_WAIT;
+            APP_UpdateState(APP_STATE_WAIT);
             break;
         }
         case APP_STATE_WAIT :
@@ -181,11 +184,14 @@ void APP_Tasks ( void )
         break;
 
        case APP_STATE_SERVICE_TASKS:
+           // Toggle de la led 2
             BSP_LEDToggle(BSP_LED_2);
 
+            // Scan des boutons
+            
             // Execution du menu
             MENU_Execute(&LocalParamGen);
-            appData.state = APP_STATE_WAIT;
+            APP_UpdateState(APP_STATE_WAIT);
          break;
         /* TODO: implement your application state machine.*/
 

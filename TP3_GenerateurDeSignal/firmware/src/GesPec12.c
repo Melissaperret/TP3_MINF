@@ -27,6 +27,7 @@
 
 #include "GesPec12.h"
 #include "Mc32Debounce.h"
+#include "Mc32DriverLcd.h"
 
 // Descripteur des sinaux
 S_SwitchDescriptor DescrA;
@@ -75,15 +76,96 @@ void ScanPec12 (bool ValA, bool ValB, bool ValPB)
    DoDebounce (&DescrPB, ValPB);
    
    // Détection incrément / décrément
-  
+   // Incrémentation
+   if(DebounceIsPressed(&DescrB) && (ValA == 0))
+   {
+       Pec12.Dec = 0;
+       Pec12.Inc = 1;
+       Pec12.NoActivity = 0;
+   }
+   // Décrémentation
+   else if(DebounceIsPressed(&DescrB) && (ValA == 1))
+   {
+       Pec12.Inc = 0;
+       Pec12.Dec = 1;
+       Pec12.NoActivity = 0;
+   }
+   // Rien
+   else
+   {
+       Pec12.NoActivity = 1;
+   }
    
+   // Clear les flag d'appui et de relachement de l'encodeur (partie B)
+   DebounceClearPressed(&DescrB);
+   DebounceClearReleased(&DescrB);
     
+   
    // Traitement du PushButton
+   // Bouton appuié
+   if(ValPB == 0)
+   {
+       Pec12.PressDuration++;
+       Pec12.NoActivity = 0;
+   }
+   // Rien
+   else
+   {
+       Pec12.NoActivity = 1;
+   }
+   
+   // Relachement du bouton
+   if(DebounceIsReleased(&DescrPB))
+   {
+       // Appui long
+       if(Pec12.PressDuration >= PRESSION_LONGUE)
+       {
+           Pec12.OK = 0;
+           Pec12.ESC = 1;
+       }
+       // Appui court
+       else
+       {
+           Pec12.ESC = 0;
+           Pec12.OK = 1;
+       }
+       // Remise à 0 du compteur de durée de l'appui
+       Pec12.PressDuration = 0;
+       Pec12.NoActivity = 0;
+   }
+   // Rien
+   else
+   {
+       Pec12.NoActivity = 1;
+   }
+   // Clear les flag d'appui et de relachement du bouton
+   DebounceClearPressed(&DescrPB);
+   DebounceClearReleased(&DescrPB);
    
    
    // Gestion inactivité
-
-
+   // Pas d'activité
+   if(Pec12.NoActivity)
+   {
+       // Depuis un certain temps
+       if(Pec12.InactivityDuration >= TEMPS_INACTIVITE)
+       {
+           lcd_bl_off();    // Éteindre la backlight
+       }
+       // Depuis un court instant
+       else
+       {
+           Pec12.InactivityDuration++;
+       }
+   }
+   // Activité
+   else
+   {
+       // Remises à zéro
+       Pec12.NoActivity = 0;
+       Pec12.InactivityDuration = 0;
+       lcd_bl_on();    // Allumer la backlight
+   }
    
  } // ScanPec12
 
