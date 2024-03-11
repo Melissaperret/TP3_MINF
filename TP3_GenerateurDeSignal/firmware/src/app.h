@@ -60,6 +60,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "system_config.h"
 #include "system_definitions.h"
 #include "DefMenuGen.h"     // paramètres du génerateur
+#include "GesPec12.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -193,6 +194,17 @@ void APP_Initialize ( void );
 
 void APP_Tasks ( void );
 void APP_UpdateState ( APP_STATES NewState  ) ;
+
+void ScanS9(bool ValS9);
+
+//       S9IsOK         true indique action OK
+bool S9IsOK (void);
+//       S9IsESC        true indique action ESC
+bool S9IsESC (void);
+//       S9ClearOK      annule indication action OK
+void S9ClearOK (void);
+//       S9ClearESC     annule indication action ESC
+void S9ClearESC (void);
 
 #endif /* _APP_H */
 /*******************************************************************************

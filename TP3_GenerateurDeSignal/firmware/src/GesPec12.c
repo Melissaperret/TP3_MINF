@@ -34,7 +34,7 @@ S_SwitchDescriptor DescrA;
 S_SwitchDescriptor DescrB;
 S_SwitchDescriptor DescrPB;
 
-// Structure pour les traitement du Pec12
+// Structure pour les traitements du Pec12
 S_Pec12_Descriptor Pec12;
 
 
@@ -111,6 +111,7 @@ void ScanPec12 (bool ValA, bool ValB, bool ValPB)
    // Rien
    else
    {
+       Pec12.PressDuration = 0;
        Pec12.NoActivity = 1;
    }
    

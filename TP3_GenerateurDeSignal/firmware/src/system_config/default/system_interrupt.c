@@ -77,6 +77,8 @@ void __ISR(_TIMER_1_VECTOR, ipl3AUTO) IntHandlerDrvTmrInstance0(void)
     static uint16_t i = 0;
     ScanPec12(PEC12_A, PEC12_B, PEC12_PB);
     
+    ScanS9(S_OK);// A changer
+    
     i++;
     if(i >= 3000)
     {

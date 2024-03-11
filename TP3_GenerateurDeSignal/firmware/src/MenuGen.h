@@ -43,6 +43,7 @@ void MENU_Initialize(S_ParamGen *pParam);
 
 void MENU_Execute(S_ParamGen *pParam);
 
+void InitAfficheurMenu(S_ParamGen *pParam);
 void AfficheMenu(S_ParamGen *pParam);
 void CopieStructS_ParamGen(S_ParamGen *pParam1, S_ParamGen *pParam2);
 
