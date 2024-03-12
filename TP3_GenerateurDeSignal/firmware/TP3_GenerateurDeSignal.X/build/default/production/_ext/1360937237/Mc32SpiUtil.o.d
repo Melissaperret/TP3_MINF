@@ -143,7 +143,7 @@ build/default/production/_ext/1360937237/Mc32SpiUtil.o: \
  ../../../../../../../framework/driver/tmr/drv_tmr_compatibility.h \
  ../../../../../../../framework/system/ports/sys_ports.h \
  ../../../../../../../framework/system/ports/sys_ports_definitions.h \
- ../src/app.h ../src/DefMenuGen.h ../src/Mc32SpiUtil.h \
+ ../src/app.h ../src/DefMenuGen.h ../src/GesPec12.h ../src/Mc32SpiUtil.h \
  ../../../../../../../framework/peripheral\SPI\plib_spi.h \
  ../../../../../../../framework/peripheral/spi/processor/spi_processor.h \
  ../../../../../../../framework/peripheral/spi/processor/spi_p32xxxx.h \
@@ -480,6 +480,8 @@ build/default/production/_ext/1360937237/Mc32SpiUtil.o: \
 ../src/app.h:
 
 ../src/DefMenuGen.h:
+
+../src/GesPec12.h:
 
 ../src/Mc32SpiUtil.h:
 

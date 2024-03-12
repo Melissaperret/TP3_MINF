@@ -111,7 +111,6 @@ void ScanPec12 (bool ValA, bool ValB, bool ValPB)
    // Rien
    else
    {
-       Pec12.PressDuration = 0;
        Pec12.NoActivity = 1;
    }
    

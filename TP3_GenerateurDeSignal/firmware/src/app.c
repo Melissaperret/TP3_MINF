@@ -59,6 +59,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "MenuGen.h"
 #include "GesPec12.h"
 #include "Generateur.h"
+#include "Mc32Debounce.h"
 
 // Descripteur des sinaux
 S_SwitchDescriptor DescrS9;

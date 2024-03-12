@@ -33,78 +33,80 @@ void MENU_Execute(S_ParamGen *pParam)
     static MENU_STATE menuStat = SEL_FORME; 
     static MENU_STATE oldMenuStat = SET_FORME;
     static S_ParamGen tempData;
-    static S_ParamGen temponData;
+    //static S_ParamGen temponData;
     static uint8_t i = 0;
     
     if(!i)
     {
         InitAfficheurMenu(pParam);
         CopieStructS_ParamGen(&tempData, pParam);
-        CopieStructS_ParamGen(&temponData, pParam);
+        //CopieStructS_ParamGen(&temponData, pParam);
         i++;
     }
     if(menuStat != SAVE)
     {
         if(menuStat % 2)
         {
-            AfficheMenu(&temponData);
+            AfficheMenu(&tempData);
             if(Pec12IsOK())
             {
+                //CopieStructS_ParamGen(&tempData, &temponData);
+                CopieStructS_ParamGen(pParam, &tempData);
                 menuStat --;
-                CopieStructS_ParamGen(&tempData, &temponData);
                 AfficheMenu(&tempData);
             }
             else if(Pec12IsESC())
             {
-                CopieStructS_ParamGen(&temponData, &tempData);
+                //CopieStructS_ParamGen(&temponData, &tempData);
+                CopieStructS_ParamGen(&tempData, pParam);
                 menuStat --;
-                AfficheMenu(&tempData);
+                AfficheMenu(pParam);
             }
             else if(Pec12IsPlus())
             {
                 switch(menuStat)
                 {
                     case SET_FORME:
-                        if(temponData.Forme < SignalCarre)
+                        if(tempData.Forme < SignalCarre)
                         {
-                            temponData.Forme++;
+                            tempData.Forme++;
                         }
                         else
                         {
-                            temponData.Forme = SignalCarre;
+                            tempData.Forme = SignalCarre;
                         }
                         break;
 
                     case SET_FREQU:
-                        if(temponData.Frequence < FREQU_MAX)
+                        if(tempData.Frequence < FREQU_MAX)
                         {
-                            temponData.Frequence += FREQU_MIN;
+                            tempData.Frequence += FREQU_MIN;
                         }
                         else
                         {
-                            temponData.Frequence = FREQU_MIN;
+                            tempData.Frequence = FREQU_MIN;
                         }
                         break;
 
                     case SET_AMPL:
-                        if(temponData.Amplitude < AMPL_MAX)
+                        if(tempData.Amplitude < AMPL_MAX)
                         {
-                            temponData.Amplitude += PAS_AMPL;
+                            tempData.Amplitude += PAS_AMPL;
                         }
                         else
                         {
-                            temponData.Amplitude = AMPL_MIN;
+                            tempData.Amplitude = AMPL_MIN;
                         }
                         break;
 
                     case SET_OFFSET:
-                        if(temponData.Offset < OFFSET_MAX)
+                        if(tempData.Offset < OFFSET_MAX)
                         {
-                            temponData.Offset += PAS_OFFSET;
+                            tempData.Offset += PAS_OFFSET;
                         }
                         else
                         {
-                            temponData.Offset = OFFSET_MAX;
+                            tempData.Offset = OFFSET_MAX;
                         }
                         break;
 
@@ -117,46 +119,46 @@ void MENU_Execute(S_ParamGen *pParam)
                 switch(menuStat)
                 {
                     case SET_FORME:
-                        if(temponData.Forme > SignalSinus)
+                        if(tempData.Forme > SignalSinus)
                         {
-                            temponData.Forme--;
+                            tempData.Forme--;
                         }
                         else
                         {
-                            temponData.Forme = SignalSinus;
+                            tempData.Forme = SignalSinus;
                         }
                         break;
 
                     case SET_FREQU:
-                        if(temponData.Frequence > FREQU_MIN)
+                        if(tempData.Frequence > FREQU_MIN)
                         {
-                            temponData.Frequence -= FREQU_MIN;
+                            tempData.Frequence -= FREQU_MIN;
                         }
                         else
                         {
-                            temponData.Frequence = FREQU_MAX;
+                            tempData.Frequence = FREQU_MAX;
                         }
                         break;
 
                     case SET_AMPL:
-                        if(temponData.Amplitude > AMPL_MIN)
+                        if(tempData.Amplitude > AMPL_MIN)
                         {
-                            temponData.Amplitude -= PAS_AMPL;
+                            tempData.Amplitude -= PAS_AMPL;
                         }
                         else
                         {
-                            temponData.Amplitude = AMPL_MAX;
+                            tempData.Amplitude = AMPL_MAX;
                         }
                         break;
 
                     case SET_OFFSET:
-                        if(temponData.Offset > OFFSET_MIN)
+                        if(tempData.Offset > OFFSET_MIN)
                         {
-                            temponData.Offset -= PAS_OFFSET;
+                            tempData.Offset -= PAS_OFFSET;
                         }
                         else
                         {
-                            temponData.Offset = OFFSET_MIN;
+                            tempData.Offset = OFFSET_MIN;
                         }
                         break;
 
@@ -190,6 +192,8 @@ void MENU_Execute(S_ParamGen *pParam)
         }
         if(S9IsOK()||S9IsESC())
         {
+            S9ClearESC();    
+            S9ClearOK();
             menuStat = SAVE;
         }
     }
@@ -350,10 +354,18 @@ void MENU_Execute(S_ParamGen *pParam)
             if(S9IsESC())
             {
                 //Sauvegarde
+                
+                //AFFICHAGE DIFFöRENT-----------------------------------------
+                InitAfficheurMenu(pParam);
+                menuStat = SEL_FORME;
             }
             else if(S9IsOK())
             {
                 //Sauvegarde annulée
+                
+                //AFFICHAGE DIFFöRENT-----------------------------------------
+                InitAfficheurMenu(pParam);
+                menuStat = SEL_FORME;
             }
             
             break;
@@ -361,6 +373,8 @@ void MENU_Execute(S_ParamGen *pParam)
             break;
     }  
     
+    S9ClearESC();    
+    S9ClearOK();
     Pec12ClearESC();    
     Pec12ClearOK();
     Pec12ClearPlus();
