@@ -12,6 +12,9 @@
 
 #include "DefMenuGen.h"
 
+
+//extern const uint16_t tableauCourbeSinus[100]; //A ne pas déclarer dans le .h pour ce projet car seulement utiliser dans Generateur.c et pas différents fichiers. 
+
 // Initialisation du  générateur
 void  GENSIG_Initialize(S_ParamGen *pParam);
 

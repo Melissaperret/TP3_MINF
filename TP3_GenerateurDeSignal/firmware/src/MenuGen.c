@@ -1,8 +1,8 @@
 // Tp3  manipulation MenuGen avec PEC12
 // C. HUBER  10/02/2015 pour SLO2 2014-2015
 // Fichier MenuGen.c
-// Gestion du menu  du générateur
-// Traitement cyclique à 10 ms
+// Gestion du menu  du gÃ©nÃ©rateur
+// Traitement cyclique Ã  10 ms
 
 
 
@@ -17,14 +17,16 @@
 
 const char MenuFormes[4][21] = {"Sinus", "Triangle", "DentDeScie", "Carre"};
 
-// Initialisation du menu et des paramètres
+// Initialisation du menu et des paramÃ¨tres
 void MENU_Initialize(S_ParamGen *pParam)
 {
+
     pParam->Amplitude = 0;
     pParam->Forme = SignalSinus;
     pParam->Frequence = 20;
     pParam->Magic = 0x12345678;
     pParam->Offset = 0;
+
 }
 
 
@@ -198,7 +200,7 @@ void MENU_Execute(S_ParamGen *pParam)
         }
     }
     
-    // Enlever l'astérix
+    // Enlever l'astÃ©rix
     if((abs(oldMenuStat - menuStat)) >= 2)
     {
         lcd_gotoxy(1,1); 
@@ -210,7 +212,7 @@ void MENU_Execute(S_ParamGen *pParam)
         lcd_gotoxy(1,4); 
         printf_lcd(" ");
     }
-    // Sauvegarde de l'état du menu
+    // Sauvegarde de l'Ã©tat du menu
     oldMenuStat = menuStat;
     
     switch(menuStat)
@@ -273,7 +275,7 @@ void MENU_Execute(S_ParamGen *pParam)
             else if(S9IsOK() || Pec12IsESC() || Pec12IsMinus() || Pec12IsOK() || Pec12IsPlus())
             {
                 y++;
-                //Sauvegarde annulée
+                //Sauvegarde annulÃ©e
                 lcd_gotoxy(1,2);
                 printf_lcd(" Sauvegarde ANNULEE ");
                 lcd_ClearLine(3);
@@ -318,7 +320,7 @@ void MENU_Execute(S_ParamGen *pParam)
 // Fonction d'affichage initiale du menu
 // Auteur: JAR, MPT
 // Date: 08.03.2024
-// Entrées: -
+// EntrÃ©es: -
 // Sortie: -
 //-------------------------------
 void InitAfficheurMenu(S_ParamGen *pParam)
@@ -337,7 +339,7 @@ void InitAfficheurMenu(S_ParamGen *pParam)
 // Fonction d'affichage des valeurs du menu
 // Auteur: JAR, MPT
 // Date: 08.03.2024
-// Entrées: -
+// EntrÃ©es: -
 // Sortie: -
 //-------------------------------
 void AfficheMenu(S_ParamGen *pParam)
@@ -354,10 +356,10 @@ void AfficheMenu(S_ParamGen *pParam)
     
 //-------------------------------
 // Fonction de copie d'une structure de type 
-// Le deuxième paramètre va être copié dans le premier
+// Le deuxiÃ¨me paramÃ¨tre va Ãªtre copiÃ© dans le premier
 // Auteur: JAR, MPT
 // Date: 08.03.2024
-// Entrées: -
+// EntrÃ©es: -
 // Sortie: -
 //-------------------------------
 void CopieStructS_ParamGen(S_ParamGen *pParam1, S_ParamGen *pParam2)

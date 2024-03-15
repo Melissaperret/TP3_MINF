@@ -59,7 +59,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdlib.h>
 #include "system_config.h"
 #include "system_definitions.h"
-#include "DefMenuGen.h"     // paramètres du génerateur
+#include "DefMenuGen.h"     // paramÃ¨tres du gÃ©nerateur
 #include "GesPec12.h"
 
 // *****************************************************************************
@@ -83,7 +83,11 @@ typedef enum
 {
 	/* Application's state machine's initial state. */
 	APP_STATE_INIT=0,
-    APP_STATE_WAIT=1,
+
+    //APP_STATE_WAIT=1,
+
+    APP_STATE_WAIT,
+
     APP_STATE_SERVICE_TASKS=2
 	
 } APP_STATES;
@@ -120,7 +124,7 @@ typedef struct
 // *****************************************************************************
 /* These routines are called by drivers when certain events occur.
 */
-
+    
 	
 // *****************************************************************************
 // *****************************************************************************

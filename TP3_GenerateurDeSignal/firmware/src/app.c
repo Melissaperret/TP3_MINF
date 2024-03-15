@@ -155,12 +155,13 @@ void APP_Tasks ( void )
         {
             lcd_init();
             lcd_bl_on();
-
+            
             // Init SPI DAC
             SPI_InitLTC2604();
-
+            
             // Initialisation PEC12
             Pec12Init();
+
             // Initialisation S9
             S9Init();
 
@@ -168,29 +169,34 @@ void APP_Tasks ( void )
             MENU_Initialize(&LocalParamGen);
 
             // Initialisation du generateur
-            GENSIG_Initialize(&LocalParamGen);
-            
+            GENSIG_Initialize(&LocalParamGen);   
+
+            lcd_gotoxy(1,1);
             printf_lcd("TP3 GenSig 23-24");
             lcd_gotoxy(1,2); 
             printf_lcd("Melissa Perret");
             lcd_gotoxy(1,3); 
             printf_lcd("Jeremy Affolter");
-
+            
+  
+            GENSIG_UpdateSignal(&LocalParamGen);
+            GENSIG_UpdatePeriode(&LocalParamGen);
+            
             // Active les timers 
             DRV_TMR0_Start();
             DRV_TMR1_Start();
-            
-            // Initialisation du Pec12
-            Pec12Init();
-            
-            GENSIG_UpdateSignal(&LocalParamGen);
-            
-            APP_UpdateState(APP_STATE_WAIT);
+
+            appData.state = APP_STATE_WAIT;  
+
             break;
         }
         case APP_STATE_WAIT :
+        {
           // nothing to do
-        break;
+            break;
+        }
+        
+
 
        case APP_STATE_SERVICE_TASKS:
            // Toggle de la led 2
@@ -202,6 +208,17 @@ void APP_Tasks ( void )
             MENU_Execute(&LocalParamGen);
             APP_UpdateState(APP_STATE_WAIT);
          break;
+
+        /*case APP_STATE_SERVICE_TASKS:
+        {   
+            BSP_LEDToggle(BSP_LED_2);
+            // Execution du menu
+            MENU_Execute(&LocalParamGen);
+            appData.state = APP_STATE_WAIT;
+            break;
+        }*/
+        
+
         /* TODO: implement your application state machine.*/
 
         /* The default state should never be executed. */
@@ -274,13 +291,13 @@ void S9Init (void)
    DebounceInit(&DescrS9);
    
    // Init de la structure S9
-    S9.Inc = 0;             // événement incrément  
-    S9.Dec = 0;             // événement décrément 
-    S9.OK = 0;              // événement action OK
-    S9.ESC = 0;             // événement action ESC
-    S9.NoActivity = 0;      // Indication d'activité
-    S9.PressDuration = 0;   // Pour durée pression du P.B.
-    S9.InactivityDuration = 0; // Durée inactivité
+    S9.Inc = 0;             // ï¿½vï¿½nement incrï¿½ment  
+    S9.Dec = 0;             // ï¿½vï¿½nement dï¿½crï¿½ment 
+    S9.OK = 0;              // ï¿½vï¿½nement action OK
+    S9.ESC = 0;             // ï¿½vï¿½nement action ESC
+    S9.NoActivity = 0;      // Indication d'activitï¿½
+    S9.PressDuration = 0;   // Pour durï¿½e pression du P.B.
+    S9.InactivityDuration = 0; // Durï¿½e inactivitï¿½
   
  } // Pec12Init
 
