@@ -74,31 +74,6 @@ void ScanPec12 (bool ValA, bool ValB, bool ValPB)
    DoDebounce (&DescrA, ValA);
    DoDebounce (&DescrB, ValB);
    DoDebounce (&DescrPB, ValPB);
-   
-   // Détection incrément / décrément
-   // Incrémentation
-   if(DebounceIsPressed(&DescrB) && (ValA == 0))
-   {
-       Pec12.Dec = 0;
-       Pec12.Inc = 1;
-       Pec12.NoActivity = 0;
-   }
-   // Décrémentation
-   else if(DebounceIsPressed(&DescrB) && (ValA == 1))
-   {
-       Pec12.Inc = 0;
-       Pec12.Dec = 1;
-       Pec12.NoActivity = 0;
-   }
-   // Rien
-   else
-   {
-       Pec12.NoActivity = 1;
-   }
-   
-   // Clear les flag d'appui et de relachement de l'encodeur (partie B)
-   DebounceClearPressed(&DescrB);
-   DebounceClearReleased(&DescrB);
     
    
    // Traitement du PushButton
@@ -111,33 +86,56 @@ void ScanPec12 (bool ValA, bool ValB, bool ValPB)
    // Rien
    else
    {
-       Pec12.NoActivity = 1;
-   }
-   
-   // Relachement du bouton
-   if(DebounceIsReleased(&DescrPB))
-   {
-       // Appui long
-       if(Pec12.PressDuration >= PRESSION_LONGUE)
+       // Relachement du bouton
+       if(DebounceIsReleased(&DescrPB))
        {
-           Pec12.OK = 0;
-           Pec12.ESC = 1;
+           // Appui long
+           if(Pec12.PressDuration >= PRESSION_LONGUE)
+           {
+               Pec12.OK = 0;
+               Pec12.ESC = 1;
+           }
+           // Appui court
+           else
+           {
+               Pec12.ESC = 0;
+               Pec12.OK = 1;
+           }
+           // Remise à 0 du compteur de durée de l'appui
+           Pec12.PressDuration = 0;
+           Pec12.NoActivity = 0;
        }
-       // Appui court
+       // Rien
        else
        {
-           Pec12.ESC = 0;
-           Pec12.OK = 1;
+           // Détection incrément / décrément
+           // Incrémentation
+           if(DebounceIsPressed(&DescrB) && (ValA == 0))
+           {
+               Pec12.Dec = 0;
+               Pec12.Inc = 1;
+               Pec12.NoActivity = 0;
+           }
+           // Décrémentation
+           else if(DebounceIsPressed(&DescrB) && (ValA == 1))
+           {
+               Pec12.Inc = 0;
+               Pec12.Dec = 1;
+               Pec12.NoActivity = 0;
+           }
+           // Rien
+           else
+           {
+               Pec12.NoActivity = 1;
+           }
        }
-       // Remise à 0 du compteur de durée de l'appui
-       Pec12.PressDuration = 0;
-       Pec12.NoActivity = 0;
    }
-   // Rien
-   else
-   {
-       Pec12.NoActivity = 1;
-   }
+   
+   // Clear les flag d'appui et de relachement de l'encodeur (partie B)
+   DebounceClearPressed(&DescrB);
+   DebounceClearReleased(&DescrB);
+   
+   
    // Clear les flag d'appui et de relachement du bouton
    DebounceClearPressed(&DescrPB);
    DebounceClearReleased(&DescrPB);

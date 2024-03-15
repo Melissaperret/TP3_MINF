@@ -14,10 +14,13 @@
 #include "GesPec12.h"
 #include "Mc32NVMUtil.h"
 #include <math.h>
+#include "Generateur.h"
+
+S_ParamGen LocalParamGen;
 
 const char MenuFormes[4][21] = {"Sinus", "Triangle", "DentDeScie", "Carre"};
 
-// Initialisation du menu et des paramètres
+// Initialisation du menu et des parametres
 void MENU_Initialize(S_ParamGen *pParam)
 {
 
@@ -47,7 +50,7 @@ void MENU_Execute(S_ParamGen *pParam)
     }
     if(menuStat != SAVE)
     {
-        if(menuStat % 2)
+        if(menuStat % 2) //si menu est en mode selection ou set 
         {
             AfficheMenu(&tempData);
             if(Pec12IsOK())
@@ -56,6 +59,8 @@ void MENU_Execute(S_ParamGen *pParam)
                 CopieStructS_ParamGen(pParam, &tempData);
                 menuStat --;
                 AfficheMenu(&tempData);
+                GENSIG_UpdateSignal(&LocalParamGen);
+                GENSIG_UpdatePeriode(&LocalParamGen);
             }
             else if(Pec12IsESC())
             {

@@ -42,6 +42,7 @@ S_ParamGen valeursParamGen;  //Structure intermédiaire
 int32_t tableauValeursSignal[MAX_ECH];
 
 
+
 // Initialisation du  générateur
 void  GENSIG_Initialize(S_ParamGen *pParam)
 {
@@ -60,7 +61,7 @@ void  GENSIG_Initialize(S_ParamGen *pParam)
         printf_lcd("Donnees par defaut");
         
         pParam->Amplitude = 10000;
-        pParam->Forme = SignalDentDeScie;
+        pParam->Forme = SignalSinus;
         pParam->Frequence = 20;
         pParam->Magic = MAGIC;
         pParam->Offset = 0;  //on fait une division par 2 
@@ -84,67 +85,63 @@ void  GENSIG_UpdatePeriode(S_ParamGen *pParam)
 void  GENSIG_UpdateSignal(S_ParamGen *pParam)
 {
     uint8_t i;
-    pParam ->Amplitude = pParam ->Amplitude / 100 ;
+    int16_t amplitude = pParam ->Amplitude / 100;
     pParam ->Offset = pParam->Offset*-0.5;//on fait une division par -2 pour plusieurs raisons, comme on a 10'000 si on veut aller à 5'000 on doit diviser par 2 et le - est pour inverser le signal. Sinon le sinus monte quand on mettait -5000 au lieu de descendre 
     
-    for ( i = 0; i < MAX_ECH ; i++)
+    for (i = 0; i < MAX_ECH ; i++)
     {
-    switch(pParam->Forme)
-    {
-        case SignalSinus:
+        switch(pParam->Forme)
         {
-            tableauValeursSignal[i] = VAL_DIVISION_TENSION + pParam ->Offset + (tableauCourbeSinus[i]-50) * pParam ->Amplitude;
-        }
-            break; 
-            
-        case SignalTriangle:
-        {
-            if ((MAX_ECH *0.5) > i)  //on fait pas directement divisé, car ça peut être couteux pour le uC
-                {
-                    tableauValeursSignal[i] = VAL_DIVISION_TENSION + pParam ->Offset + (pParam ->Amplitude *(2 * (i -25)));
+            case SignalSinus:
+            {
+                tableauValeursSignal[i] = VAL_DIVISION_TENSION + pParam ->Offset + (tableauCourbeSinus[i]-50) * amplitude;
+            }
+                break; 
 
-                }
-            else 
-                {
+            case SignalTriangle:
+            {
+                if ((MAX_ECH *0.5) > i)  //on fait pas directement divisé, car ça peut être couteux pour le uC
+                    {
+                        tableauValeursSignal[i] = VAL_DIVISION_TENSION + pParam ->Offset + (amplitude *(2 * (i -25)));
+                    }
+                else 
+                    {
 
-                    tableauValeursSignal[i] = VAL_DIVISION_TENSION + pParam ->Offset + (pParam ->Amplitude * (100 - 2 * (i-25)));
-                }
-        }   
-            break ; 
-            
-            
-        case SignalDentDeScie:
-        {
-            tableauValeursSignal[i] = VAL_DIVISION_TENSION + (pParam ->Offset + (((i-50) * pParam ->Amplitude)));    
-        }
-            break; 
-            
-        case SignalCarre: 
-        {
-            if ((MAX_ECH /2) > i)
-                {
-                    tableauValeursSignal[i] = (VAL_DIVISION_TENSION + (pParam ->Offset + (pParam ->Amplitude / 2 *MAX_ECH))) ;
-                }
-            else 
-                {
-                    tableauValeursSignal[i] = (VAL_DIVISION_TENSION - (pParam ->Offset + (pParam ->Amplitude / 2 *MAX_ECH))) ;
-                }
-        }
-            break; 
+                        tableauValeursSignal[i] = VAL_DIVISION_TENSION + pParam ->Offset + (amplitude * (100 - 2 * (i-25)));
+                    }
+            }   
+                break ; 
+            case SignalDentDeScie:
+            {
+                tableauValeursSignal[i] = VAL_DIVISION_TENSION + (pParam ->Offset + (((i-50) * amplitude)));    
+            }
+                break; 
 
-        default:
-            break;
-    }
+            case SignalCarre: 
+            {
+                if ((MAX_ECH /2) > i)
+                    {
+                        tableauValeursSignal[i] = (VAL_DIVISION_TENSION + (pParam ->Offset + (amplitude / 2 *MAX_ECH))) ;
+                    }
+                else 
+                    {
+                        tableauValeursSignal[i] = (VAL_DIVISION_TENSION - (pParam ->Offset + (amplitude / 2 *MAX_ECH))) ;
+                    }
+            }
+                break; 
+
+            default:
+                break;
+        }
     
-    if(tableauValeursSignal[i] > MAX_AMPLITUDE)
-    {
-        tableauValeursSignal[i] = MAX_AMPLITUDE;
-    }
-    else if (tableauValeursSignal[i] < 0) 
-    {
-        tableauValeursSignal[i] = 0;
-    }
-    
+        if(tableauValeursSignal[i] > MAX_AMPLITUDE)
+        {
+            tableauValeursSignal[i] = MAX_AMPLITUDE;
+        }
+        else if (tableauValeursSignal[i] < 0) 
+        {
+            tableauValeursSignal[i] = 0;
+        }
         tableauValeursSignal[i] = ((VAL_MAX_PAS * tableauValeursSignal[i])/10000);  
     }
 }

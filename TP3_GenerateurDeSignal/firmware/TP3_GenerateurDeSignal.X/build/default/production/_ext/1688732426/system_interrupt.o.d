@@ -144,7 +144,8 @@ build/default/production/_ext/1688732426/system_interrupt.o: \
  ../../../../../../../framework/system/ports/sys_ports.h \
  ../../../../../../../framework/system/ports/sys_ports_definitions.h \
  ../src/DefMenuGen.h ../src/GesPec12.h \
- ../src/system_config/default/system_definitions.h ../src/GesPec12.h
+ ../src/system_config/default/system_definitions.h ../src/Generateur.h \
+ ../src/GesPec12.h
 
 ../../../../../../../framework/system/common/sys_common.h:
 
@@ -439,5 +440,7 @@ build/default/production/_ext/1688732426/system_interrupt.o: \
 ../src/GesPec12.h:
 
 ../src/system_config/default/system_definitions.h:
+
+../src/Generateur.h:
 
 ../src/GesPec12.h:

@@ -166,7 +166,7 @@ void APP_Tasks ( void )
             S9Init();
 
             // Initialisation du menu
-            MENU_Initialize(&LocalParamGen);
+            //MENU_Initialize(&LocalParamGen);
 
             // Initialisation du generateur
             GENSIG_Initialize(&LocalParamGen);   
@@ -178,15 +178,15 @@ void APP_Tasks ( void )
             lcd_gotoxy(1,3); 
             printf_lcd("Jeremy Affolter");
             
-  
-            GENSIG_UpdateSignal(&LocalParamGen);
-            GENSIG_UpdatePeriode(&LocalParamGen);
             
             // Active les timers 
             DRV_TMR0_Start();
             DRV_TMR1_Start();
+            
+            GENSIG_UpdateSignal(&LocalParamGen);
+            GENSIG_UpdatePeriode(&LocalParamGen);
 
-            appData.state = APP_STATE_WAIT;  
+            APP_UpdateState(APP_STATE_WAIT); 
 
             break;
         }
@@ -195,8 +195,6 @@ void APP_Tasks ( void )
           // nothing to do
             break;
         }
-        
-
 
        case APP_STATE_SERVICE_TASKS:
            // Toggle de la led 2
@@ -206,6 +204,8 @@ void APP_Tasks ( void )
             
             // Execution du menu
             MENU_Execute(&LocalParamGen);
+//            GENSIG_UpdateSignal(&LocalParamGen);
+//            GENSIG_UpdatePeriode(&LocalParamGen);
             APP_UpdateState(APP_STATE_WAIT);
          break;
 
