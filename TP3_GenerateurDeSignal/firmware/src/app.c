@@ -161,6 +161,8 @@ void APP_Tasks ( void )
 
             // Initialisation PEC12
             Pec12Init();
+            // Initialisation S9
+            S9Init();
 
             // Initialisation du menu
             MENU_Initialize(&LocalParamGen);
@@ -265,6 +267,22 @@ void S9ClearOK   (void) {
 void S9ClearESC   (void) {
    S9.ESC = 0;
 }
+
+void S9Init (void)
+{
+   // Initialisation du descripteur de S9
+   DebounceInit(&DescrS9);
+   
+   // Init de la structure S9
+    S9.Inc = 0;             // événement incrément  
+    S9.Dec = 0;             // événement décrément 
+    S9.OK = 0;              // événement action OK
+    S9.ESC = 0;             // événement action ESC
+    S9.NoActivity = 0;      // Indication d'activité
+    S9.PressDuration = 0;   // Pour durée pression du P.B.
+    S9.InactivityDuration = 0; // Durée inactivité
+  
+ } // Pec12Init
 
 /*******************************************************************************
  End of File

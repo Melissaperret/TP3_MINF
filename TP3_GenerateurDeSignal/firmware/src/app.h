@@ -205,6 +205,8 @@ bool S9IsESC (void);
 void S9ClearOK (void);
 //       S9ClearESC     annule indication action ESC
 void S9ClearESC (void);
+// Initialisation de S9
+void S9Init (void);
 
 #endif /* _APP_H */
 /*******************************************************************************

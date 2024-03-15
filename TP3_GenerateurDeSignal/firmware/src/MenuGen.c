@@ -12,6 +12,7 @@
 #include "Mc32DriverLcd.h"
 #include "app.h"
 #include "GesPec12.h"
+#include "Mc32NVMUtil.h"
 #include <math.h>
 
 const char MenuFormes[4][21] = {"Sinus", "Triangle", "DentDeScie", "Carre"};
@@ -33,14 +34,13 @@ void MENU_Execute(S_ParamGen *pParam)
     static MENU_STATE menuStat = SEL_FORME; 
     static MENU_STATE oldMenuStat = SET_FORME;
     static S_ParamGen tempData;
-    //static S_ParamGen temponData;
     static uint8_t i = 0;
+    static uint8_t y = 0;
     
     if(!i)
     {
         InitAfficheurMenu(pParam);
         CopieStructS_ParamGen(&tempData, pParam);
-        //CopieStructS_ParamGen(&temponData, pParam);
         i++;
     }
     if(menuStat != SAVE)
@@ -218,157 +218,90 @@ void MENU_Execute(S_ParamGen *pParam)
         case SEL_FORME:
             lcd_gotoxy(1,1); 
             printf_lcd("*");
-//            if(Pec12IsOK())
-//            {
-//                menuStat = SET_FORME;
-//            }
-//            else if(Pec12IsPlus())
-//            {
-//                menuStat = SEL_OFFSET;
-//            }
-//            else if(Pec12IsMinus())
-//            {
-//                menuStat = SEL_FREQU;
-//            }
             break;
+            
         case SET_FORME:
             lcd_gotoxy(1,1); 
             printf_lcd("?");
-//            if(Pec12IsOK())
-//            {
-//                menuStat = SEL_FORME;
-//            }
-//            else if(Pec12IsPlus())
-//            {
-//                menuStat = SEL_OFFSET;
-//            }
-//            else if(Pec12IsMinus())
-//            {
-//                menuStat = SEL_FREQU;
-//            }
             break;
+            
         case SEL_FREQU:
             lcd_gotoxy(1,2); 
             printf_lcd("*");
-//            if(Pec12IsOK())
-//            {
-//                menuStat = SET_FORME;
-//            }
-//            else if(Pec12IsPlus())
-//            {
-//                menuStat = SEL_OFFSET;
-//            }
-//            else if(Pec12IsMinus())
-//            {
-//                menuStat = SEL_FREQU;
-//            }
             break;
+            
         case SET_FREQU:
             lcd_gotoxy(1,2); 
             printf_lcd("?");
-            //if(Pec12IsOK())
-//            {
-//                menuStat = SET_FORME;
-//            }
-//            else if(Pec12IsPlus())
-//            {
-//                menuStat = SEL_OFFSET;
-//            }
-//            else if(Pec12IsMinus())
-//            {
-//                menuStat = SEL_FREQU;
-//            }
             break;
+            
         case SEL_AMPL:
             lcd_gotoxy(1,3); 
             printf_lcd("*");
-//            if(Pec12IsOK())
-//            {
-//                menuStat = SET_FORME;
-//            }
-//            else if(Pec12IsPlus())
-//            {
-//                menuStat = SEL_OFFSET;
-//            }
-//            else if(Pec12IsMinus())
-//            {
-//                menuStat = SEL_FREQU;
-//            }
             break;
+            
         case SET_AMPL:
             lcd_gotoxy(1,3); 
             printf_lcd("?");
-//            if(Pec12IsOK())
-//            {
-//                menuStat = SET_FORME;
-//            }
-//            else if(Pec12IsPlus())
-//            {
-//                menuStat = SEL_OFFSET;
-//            }
-//            else if(Pec12IsMinus())
-//            {
-//                menuStat = SEL_FREQU;
-//            }
             break;
+            
         case SEL_OFFSET:
             lcd_gotoxy(1,4); 
             printf_lcd("*");
-//            if(Pec12IsOK())
-//            {
-//                menuStat = SET_FORME;
-//            }
-//            else if(Pec12IsPlus())
-//            {
-//                menuStat = SEL_OFFSET;
-//            }
-//            else if(Pec12IsMinus())
-//            {
-//                menuStat = SEL_FREQU;
-//            }
             break;
+            
         case SET_OFFSET:
             lcd_gotoxy(1,4); 
             printf_lcd("?");
-//            if(Pec12IsOK())
-//            {
-//                menuStat = SET_FORME;
-//            }
-//            else if(Pec12IsPlus())
-//            {
-//                menuStat = SEL_OFFSET;
-//            }
-//            else if(Pec12IsMinus())
-//            {
-//                menuStat = SEL_FREQU;
-//            }
             break;
+            
         case SAVE:
-            lcd_ClearLine(1);
-            lcd_ClearLine(4);
-            lcd_gotoxy(1,2);
-            printf_lcd("    Sauvegarde ?    ");
-            lcd_gotoxy(1,3);
-            printf_lcd("    (Appui long)    ");
+            
             
             if(S9IsESC())
             {
+                y++;
                 //Sauvegarde
-                
-                //AFFICHAGE DIFFöRENT-----------------------------------------
-                InitAfficheurMenu(pParam);
-                menuStat = SEL_FORME;
+                // (uint32_t*)
+                NVM_WriteBlock((uint32_t*)pParam, sizeof(tempData));
+                lcd_gotoxy(1,2);
+                printf_lcd("    Sauvegarde OK   ");
+                lcd_ClearLine(3);
+//                InitAfficheurMenu(pParam);
+//                menuStat = SEL_FORME;
             }
-            else if(S9IsOK())
+            else if(S9IsOK() || Pec12IsESC() || Pec12IsMinus() || Pec12IsOK() || Pec12IsPlus())
             {
+                y++;
                 //Sauvegarde annulée
-                
-                //AFFICHAGE DIFFöRENT-----------------------------------------
-                InitAfficheurMenu(pParam);
-                menuStat = SEL_FORME;
+                lcd_gotoxy(1,2);
+                printf_lcd(" Sauvegarde ANNULEE ");
+                lcd_ClearLine(3);
+//                InitAfficheurMenu(pParam);
+//                menuStat = SEL_FORME;
             }
             
+            if(y > 0)
+            {
+                y++;
+                if (y > 200)
+                {
+                    InitAfficheurMenu(pParam);
+                    y = 0;
+                    menuStat = SEL_FORME;
+                }
+            }
+            else
+            {
+                lcd_ClearLine(1);
+                lcd_ClearLine(4);
+                lcd_gotoxy(1,2);
+                printf_lcd("    Sauvegarde ?    ");
+                lcd_gotoxy(1,3);
+                printf_lcd("    (Appui long)    ");
+            }
             break;
+            
         default:
             break;
     }  
