@@ -75,8 +75,27 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 void __ISR(_TIMER_1_VECTOR, ipl3AUTO) IntHandlerDrvTmrInstance0(void)
 {
+
+    static uint16_t i = 0;
+    ScanPec12(PEC12_A, PEC12_B, PEC12_PB);
+    
+    ScanS9(S_OK);// A changer
+    
+    i++;
+    if(i >= 3000)
+    {
+        i = 2990;
+        APP_UpdateState(APP_STATE_SERVICE_TASKS);
+    }
+
+    PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_TIMER_1);
+}
+
+/*void __ISR(_TIMER_3_VECTOR, ipl7AUTO) IntHandlerDrvTmrInstance1(void)
+{
+
     LED1_W = !LED1_R;
-    //LED1_W = 1;  //Sert à prendre les mesures, mais peut être retiré pour le code final  
+    //LED1_W = 1;  //Sert Ã  prendre les mesures, mais peut Ãªtre retirÃ© pour le code final  
     static uint16_t i;
     static uint8_t compteur; 
     
@@ -104,16 +123,18 @@ void __ISR(_TIMER_1_VECTOR, ipl3AUTO) IntHandlerDrvTmrInstance0(void)
     
     ScanPec12(PEC12_A,PEC12_B,PEC12_PB);
     
-    //LED1_W = 0; //Sert à prendre les mesures, mais peut être retiré pour le code final 
+    //LED1_W = 0; //Sert Ã  prendre les mesures, mais peut Ãªtre retirÃ© pour le code final 
     
     PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_TIMER_1);
-}
+}*/
+
 void __ISR(_TIMER_3_VECTOR, ipl6AUTO) IntHandlerDrvTmrInstance1(void)
 {
     LED0_W = 1;
     GENSIG_Execute(); 
     LED0_W = 0;
     
+
     PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_TIMER_3);
 }
  /*******************************************************************************

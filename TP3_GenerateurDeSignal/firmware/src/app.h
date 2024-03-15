@@ -59,8 +59,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdlib.h>
 #include "system_config.h"
 #include "system_definitions.h"
-
-#include "DefMenuGen.h"     // paramètres du génerateur
+#include "DefMenuGen.h"     // paramÃ¨tres du gÃ©nerateur
+#include "GesPec12.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -83,7 +83,11 @@ typedef enum
 {
 	/* Application's state machine's initial state. */
 	APP_STATE_INIT=0,
+
+    //APP_STATE_WAIT=1,
+
     APP_STATE_WAIT,
+
     APP_STATE_SERVICE_TASKS=2
 	
 } APP_STATES;
@@ -194,6 +198,19 @@ void APP_Initialize ( void );
 
 void APP_Tasks ( void );
 void APP_UpdateState ( APP_STATES NewState  ) ;
+
+void ScanS9(bool ValS9);
+
+//       S9IsOK         true indique action OK
+bool S9IsOK (void);
+//       S9IsESC        true indique action ESC
+bool S9IsESC (void);
+//       S9ClearOK      annule indication action OK
+void S9ClearOK (void);
+//       S9ClearESC     annule indication action ESC
+void S9ClearESC (void);
+// Initialisation de S9
+void S9Init (void);
 
 #endif /* _APP_H */
 /*******************************************************************************

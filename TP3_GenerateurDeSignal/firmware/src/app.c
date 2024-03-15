@@ -54,11 +54,18 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 
 #include "app.h"
-#include "Mc32DriverLcd.h"
 #include "Mc32gestSpiDac.h"
+#include "MC32DriverLcd.h"
 #include "MenuGen.h"
 #include "GesPec12.h"
 #include "Generateur.h"
+#include "Mc32Debounce.h"
+
+// Descripteur des sinaux
+S_SwitchDescriptor DescrS9;
+
+// Structure pour les traitements de S9
+S_Pec12_Descriptor S9;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -154,7 +161,10 @@ void APP_Tasks ( void )
             
             // Initialisation PEC12
             Pec12Init();
-            
+
+            // Initialisation S9
+            S9Init();
+
             // Initialisation du menu
             MENU_Initialize(&LocalParamGen);
 
@@ -175,9 +185,9 @@ void APP_Tasks ( void )
             // Active les timers 
             DRV_TMR0_Start();
             DRV_TMR1_Start();
-            
 
             appData.state = APP_STATE_WAIT;  
+
             break;
         }
         case APP_STATE_WAIT :
@@ -187,15 +197,28 @@ void APP_Tasks ( void )
         }
         
 
-        case APP_STATE_SERVICE_TASKS:
+
+       case APP_STATE_SERVICE_TASKS:
+           // Toggle de la led 2
+            BSP_LEDToggle(BSP_LED_2);
+
+            // Scan des boutons
+            
+            // Execution du menu
+            MENU_Execute(&LocalParamGen);
+            APP_UpdateState(APP_STATE_WAIT);
+         break;
+
+        /*case APP_STATE_SERVICE_TASKS:
         {   
             BSP_LEDToggle(BSP_LED_2);
             // Execution du menu
             MENU_Execute(&LocalParamGen);
             appData.state = APP_STATE_WAIT;
             break;
-        }
+        }*/
         
+
         /* TODO: implement your application state machine.*/
 
         /* The default state should never be executed. */
@@ -211,6 +234,72 @@ void APP_UpdateState ( APP_STATES NewState )
 {
     appData.state = NewState;
 }
+
+
+void ScanS9(bool ValS9)
+{
+   // Traitement antirebond
+   DoDebounce (&DescrS9, ValS9);
+   
+   if(ValS9 == 0)
+   {
+       S9.PressDuration++;
+   }
+   
+   if(DebounceIsReleased(&DescrS9))
+   {
+       if(S9.PressDuration >= PRESSION_LONGUE)
+       {
+           S9.ESC = 1;
+           S9.OK = 0;
+       }
+       else
+       {
+           S9.OK = 1;
+           S9.ESC = 0;
+       }
+       S9.PressDuration = 0;
+   }
+   // Clear les flag d'appui et de relachement du bouton
+   DebounceClearPressed(&DescrS9);
+   DebounceClearReleased(&DescrS9);
+}
+
+//       S9IsOK         true indique action OK
+bool S9IsOK    (void) {
+   return (S9.OK);
+}
+
+//       S9IsESC        true indique action ESC
+bool S9IsESC    (void) {
+   return (S9.ESC);
+}
+
+//       S9ClearOK      annule indication action OK
+void S9ClearOK   (void) {
+   S9.OK = 0;
+}
+
+//       S9ClearESC     annule indication action ESC
+void S9ClearESC   (void) {
+   S9.ESC = 0;
+}
+
+void S9Init (void)
+{
+   // Initialisation du descripteur de S9
+   DebounceInit(&DescrS9);
+   
+   // Init de la structure S9
+    S9.Inc = 0;             // �v�nement incr�ment  
+    S9.Dec = 0;             // �v�nement d�cr�ment 
+    S9.OK = 0;              // �v�nement action OK
+    S9.ESC = 0;             // �v�nement action ESC
+    S9.NoActivity = 0;      // Indication d'activit�
+    S9.PressDuration = 0;   // Pour dur�e pression du P.B.
+    S9.InactivityDuration = 0; // Dur�e inactivit�
+  
+ } // Pec12Init
 
 /*******************************************************************************
  End of File
