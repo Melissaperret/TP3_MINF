@@ -148,6 +148,18 @@ void APP_Tasks ( void )
         {
             lcd_init();
             lcd_bl_on();
+            
+            // Init SPI DAC
+            SPI_InitLTC2604();
+            
+            // Initialisation PEC12
+            Pec12Init();
+            
+            // Initialisation du menu
+            MENU_Initialize(&LocalParamGen);
+
+            // Initialisation du generateur
+            GENSIG_Initialize(&LocalParamGen);   
 
             lcd_gotoxy(1,1);
             printf_lcd("TP3 GenSig 23-24");
@@ -156,37 +168,34 @@ void APP_Tasks ( void )
             lcd_gotoxy(1,3); 
             printf_lcd("Jeremy Affolter");
             
-            // Init SPI DAC
-            SPI_InitLTC2604();
-
-            // Initialisation PEC12
-            Pec12Init();
-
-            // Initialisation du menu
-            MENU_Initialize(&LocalParamGen);
-
-            // Initialisation du generateur
-            GENSIG_Initialize(&LocalParamGen);           
-          
+  
+            GENSIG_UpdateSignal(&LocalParamGen);
+            GENSIG_UpdatePeriode(&LocalParamGen);
+            
             // Active les timers 
             DRV_TMR0_Start();
             DRV_TMR1_Start();
             
-            GENSIG_UpdateSignal(&LocalParamGen);
-            
-            appData.state = APP_STATE_WAIT;
+
+            appData.state = APP_STATE_WAIT;  
             break;
         }
         case APP_STATE_WAIT :
+        {
           // nothing to do
-        break;
+            break;
+        }
+        
 
-       case APP_STATE_SERVICE_TASKS:
-           
+        case APP_STATE_SERVICE_TASKS:
+        {   
+            BSP_LEDToggle(BSP_LED_2);
             // Execution du menu
             MENU_Execute(&LocalParamGen);
             appData.state = APP_STATE_WAIT;
-         break;
+            break;
+        }
+        
         /* TODO: implement your application state machine.*/
 
         /* The default state should never be executed. */
