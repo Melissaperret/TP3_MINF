@@ -153,6 +153,8 @@ void APP_Tasks ( void )
         /* Application's initial state. */
         case APP_STATE_INIT:
         {
+            LED2_W = 0; 
+            
             lcd_init();
             lcd_bl_on();
             
@@ -164,10 +166,7 @@ void APP_Tasks ( void )
 
             // Initialisation S9
             S9Init();
-
-            // Initialisation du menu
-            //MENU_Initialize(&LocalParamGen);
-
+            
             // Initialisation du generateur
             GENSIG_Initialize(&LocalParamGen);   
 
@@ -179,47 +178,34 @@ void APP_Tasks ( void )
             printf_lcd("Jeremy Affolter");
             
             
+            GENSIG_UpdateSignal(&LocalParamGen);
+            GENSIG_UpdatePeriode(&LocalParamGen);
+            
             // Active les timers 
             DRV_TMR0_Start();
             DRV_TMR1_Start();
             
-            GENSIG_UpdateSignal(&LocalParamGen);
-            GENSIG_UpdatePeriode(&LocalParamGen);
-
-            APP_UpdateState(APP_STATE_WAIT); 
-
+            LED2_W = 1;
+            
+            APP_UpdateState(APP_STATE_WAIT);    // Passer à l'état d'attente
             break;
         }
         case APP_STATE_WAIT :
         {
-          // nothing to do
+            // nothing to do
             break;
         }
 
        case APP_STATE_SERVICE_TASKS:
-           // Toggle de la led 2
+            // Toggle de la led 2
             BSP_LEDToggle(BSP_LED_2);
 
             // Scan des boutons
             
             // Execution du menu
             MENU_Execute(&LocalParamGen);
-//            GENSIG_UpdateSignal(&LocalParamGen);
-//            GENSIG_UpdatePeriode(&LocalParamGen);
-            APP_UpdateState(APP_STATE_WAIT);
+            APP_UpdateState(APP_STATE_WAIT);    // Passer à l'état d'attente
          break;
-
-        /*case APP_STATE_SERVICE_TASKS:
-        {   
-            BSP_LEDToggle(BSP_LED_2);
-            // Execution du menu
-            MENU_Execute(&LocalParamGen);
-            appData.state = APP_STATE_WAIT;
-            break;
-        }*/
-        
-
-        /* TODO: implement your application state machine.*/
 
         /* The default state should never be executed. */
         default:
@@ -232,33 +218,44 @@ void APP_Tasks ( void )
 
 void APP_UpdateState ( APP_STATES NewState )
 {
-    appData.state = NewState;
+    appData.state = NewState;   // Change l'état de la machine d'état
 }
 
-
+//-------------------------------
+// Gestion du bouton S9
+// Auteur: JAR, MPT
+// Date: 01.03.2024
+// Entrées: bool ValS9
+// Sortie: -
+//-------------------------------
 void ScanS9(bool ValS9)
 {
    // Traitement antirebond
    DoDebounce (&DescrS9, ValS9);
    
+   // Compte le temps d'appui
    if(ValS9 == 0)
    {
        S9.PressDuration++;
    }
    
+   // Lors d'un relachement
    if(DebounceIsReleased(&DescrS9))
    {
+       // Test de la durée d'appui
        if(S9.PressDuration >= PRESSION_LONGUE)
        {
+           // Appui long
            S9.ESC = 1;
            S9.OK = 0;
        }
        else
        {
+           // Appui court
            S9.OK = 1;
            S9.ESC = 0;
        }
-       S9.PressDuration = 0;
+       S9.PressDuration = 0;    // Remise à 0 du temps d'appui
    }
    // Clear les flag d'appui et de relachement du bouton
    DebounceClearPressed(&DescrS9);
@@ -291,13 +288,13 @@ void S9Init (void)
    DebounceInit(&DescrS9);
    
    // Init de la structure S9
-    S9.Inc = 0;             // ï¿½vï¿½nement incrï¿½ment  
-    S9.Dec = 0;             // ï¿½vï¿½nement dï¿½crï¿½ment 
-    S9.OK = 0;              // ï¿½vï¿½nement action OK
-    S9.ESC = 0;             // ï¿½vï¿½nement action ESC
-    S9.NoActivity = 0;      // Indication d'activitï¿½
-    S9.PressDuration = 0;   // Pour durï¿½e pression du P.B.
-    S9.InactivityDuration = 0; // Durï¿½e inactivitï¿½
+    S9.Inc = 0;             // Événement incrément  
+    S9.Dec = 0;             // Événement décrément 
+    S9.OK = 0;              // Événement action OK
+    S9.ESC = 0;             // Événement action ESC
+    S9.NoActivity = 0;      // Indication d'activité
+    S9.PressDuration = 0;   // Pour durée pression du P.B.
+    S9.InactivityDuration = 0; // Durée inactivité
   
  } // Pec12Init
 

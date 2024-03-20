@@ -83,58 +83,44 @@ void ScanPec12 (bool ValA, bool ValB, bool ValPB)
        Pec12.PressDuration++;
        Pec12.NoActivity = 0;
    }
-   // Rien
-   else
+   // Relachement du bouton
+   else if(DebounceIsReleased(&DescrPB))
    {
-       // Relachement du bouton
-       if(DebounceIsReleased(&DescrPB))
+       // Appui long
+       if(Pec12.PressDuration >= PRESSION_LONGUE)
        {
-           // Appui long
-           if(Pec12.PressDuration >= PRESSION_LONGUE)
-           {
-               Pec12.OK = 0;
-               Pec12.ESC = 1;
-           }
-           // Appui court
-           else
-           {
-               Pec12.ESC = 0;
-               Pec12.OK = 1;
-           }
-           // Remise à 0 du compteur de durée de l'appui
-           Pec12.PressDuration = 0;
-           Pec12.NoActivity = 0;
+           Pec12.OK = 0;
+           Pec12.ESC = 1;
        }
-       // Rien
+       // Appui court
        else
        {
-           // Détection incrément / décrément
-           // Incrémentation
-           if(DebounceIsPressed(&DescrB) && (ValA == 0))
-           {
-               Pec12.Dec = 0;
-               Pec12.Inc = 1;
-               Pec12.NoActivity = 0;
-           }
-           // Décrémentation
-           else if(DebounceIsPressed(&DescrB) && (ValA == 1))
-           {
-               Pec12.Inc = 0;
-               Pec12.Dec = 1;
-               Pec12.NoActivity = 0;
-           }
-           // Rien
-           else
-           {
-               Pec12.NoActivity = 1;
-           }
+           Pec12.ESC = 0;
+           Pec12.OK = 1;
        }
+       // Remise à 0 du compteur de durée de l'appui
+       Pec12.PressDuration = 0;
+       Pec12.NoActivity = 0;
+   }
+   // Détection incrément / décrément
+   // Incrémentation
+   else if(DebounceIsPressed(&DescrB) && (DebounceGetInput(&DescrA) == 0))
+   {
+       Pec12.Dec = 0;
+       Pec12.Inc = 1;
+       Pec12.NoActivity = 0;
+   }
+   // Décrémentation
+   else if(DebounceIsPressed(&DescrB) && (DebounceGetInput(&DescrA) == 1))
+   {
+       Pec12.Inc = 0;
+       Pec12.Dec = 1;
+       Pec12.NoActivity = 0;
    }
    
    // Clear les flag d'appui et de relachement de l'encodeur (partie B)
    DebounceClearPressed(&DescrB);
    DebounceClearReleased(&DescrB);
-   
    
    // Clear les flag d'appui et de relachement du bouton
    DebounceClearPressed(&DescrPB);
@@ -160,7 +146,7 @@ void ScanPec12 (bool ValA, bool ValB, bool ValPB)
    else
    {
        // Remises à zéro
-       Pec12.NoActivity = 0;
+       Pec12.NoActivity = 1;
        Pec12.InactivityDuration = 0;
        lcd_bl_on();    // Allumer la backlight
    }
@@ -236,6 +222,7 @@ void Pec12ClearESC   (void) {
    Pec12.ESC = 0;
 }
 
+//      Pec12ClearInactivity    Clear l'inactivité
 void Pec12ClearInactivity   (void) {
   Pec12.NoActivity = 0;
   Pec12.InactivityDuration = 0;
