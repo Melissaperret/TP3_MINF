@@ -43,7 +43,7 @@ int32_t tableauValeursSignal[MAX_ECH];
 //-------------------------------
 void  GENSIG_Initialize(S_ParamGen *pParam)
 {
-    //Récupération des données sauvegardées au démarrage précédant
+    //Récupération des données sauvegardées au démarrage précédent
     //On fait un pointeur de 32bits 
     NVM_ReadBlock((uint32_t*)&valeursParamGen, sizeof(S_ParamGen));
     
@@ -60,7 +60,7 @@ void  GENSIG_Initialize(S_ParamGen *pParam)
         lcd_gotoxy(1,4);
         printf_lcd("Donnees par defaut");
         
-        // Initialisation des valeursdu générateur
+        // Initialisation des valeurs du générateur
         pParam->Amplitude = 10000;
         pParam->Forme = SignalSinus;
         pParam->Frequence = 20;
@@ -98,8 +98,10 @@ void  GENSIG_UpdatePeriode(S_ParamGen *pParam)
 void    GENSIG_UpdateSignal(S_ParamGen *pParam)
 {
     uint8_t nbEchantillon;
-    int16_t amplitude = pParam ->Amplitude / 100;
-    pParam ->Offset = pParam->Offset*-1;//on fait fois -1 car le - est pour inverser le signal. Sinon le sinus monte quand on mettait -5000 au lieu de descendre 
+    int16_t amplitude;
+    amplitude = pParam ->Amplitude / 100;
+    int16_t offset;
+    offset = pParam->Offset * -0.5;//on fait fois -1 car le - est pour inverser le signal. Sinon le sinus monte quand on mettait -5000 au lieu de descendre 
     
     // Boucle pour le calcul de tous les échantillons
     for (nbEchantillon = 0; nbEchantillon < MAX_ECH ; nbEchantillon++)
@@ -109,7 +111,7 @@ void    GENSIG_UpdateSignal(S_ParamGen *pParam)
             case SignalSinus:
             {
                 // Calcul du sinus
-                tableauValeursSignal[nbEchantillon] = VAL_DIVISION_TENSION + pParam ->Offset + (tableauCourbeSinus[nbEchantillon]-50) * amplitude;
+                tableauValeursSignal[nbEchantillon] = VAL_DIVISION_TENSION + offset + (tableauCourbeSinus[nbEchantillon]-50) * amplitude;
             }
                 break; 
 
@@ -118,19 +120,19 @@ void    GENSIG_UpdateSignal(S_ParamGen *pParam)
                 // Calcul du triangle
                 if ((MAX_ECH * 0.5) > nbEchantillon)  //on fait pas directement divisé, car ça peut être couteux pour le uC
                     {
-                        tableauValeursSignal[nbEchantillon] = VAL_DIVISION_TENSION + pParam ->Offset + (amplitude *(2 * (nbEchantillon -25))); //amplitude en mV
+                        tableauValeursSignal[nbEchantillon] = VAL_DIVISION_TENSION + offset + (amplitude *(2 * (nbEchantillon -25))); //amplitude en mV
                     }
                 else 
                     {
 
-                        tableauValeursSignal[nbEchantillon] = VAL_DIVISION_TENSION + pParam ->Offset + (amplitude * (100 - 2 * (nbEchantillon-25)));
+                        tableauValeursSignal[nbEchantillon] = VAL_DIVISION_TENSION + offset + (amplitude * (100 - 2 * (nbEchantillon-25)));
                     }
             }   
                 break ; 
             case SignalDentDeScie:
             {
                 // Calcul de la dent de scie
-                tableauValeursSignal[nbEchantillon] = VAL_DIVISION_TENSION + (pParam ->Offset + (((nbEchantillon-50) * amplitude)));    
+                tableauValeursSignal[nbEchantillon] = VAL_DIVISION_TENSION + (offset + (((nbEchantillon-50) * amplitude)));    
             }
                 break; 
 
@@ -139,11 +141,11 @@ void    GENSIG_UpdateSignal(S_ParamGen *pParam)
                 // Calcul du carré
                 if ((MAX_ECH * 0.5) > nbEchantillon)  //*0.5 = division par 2
                     {
-                        tableauValeursSignal[nbEchantillon] = VAL_DIVISION_TENSION + ((amplitude * 0.5 * MAX_ECH)+ pParam ->Offset);
+                        tableauValeursSignal[nbEchantillon] = VAL_DIVISION_TENSION + ((amplitude * 0.5 * MAX_ECH)+ offset);
                     }
                  else 
                     {
-                        tableauValeursSignal[nbEchantillon] = VAL_DIVISION_TENSION - ((amplitude * 0.5 * MAX_ECH)- pParam ->Offset);
+                        tableauValeursSignal[nbEchantillon] = VAL_DIVISION_TENSION - ((amplitude * 0.5 * MAX_ECH)- offset);
                     }
             }
                 break; 
