@@ -75,7 +75,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 void __ISR(_TIMER_1_VECTOR, ipl3AUTO) IntHandlerDrvTmrInstance0(void)
 {
     BSP_LEDToggle(BSP_LED_1);
-    //  LED1_W = !LED1_R;
     static uint16_t i = 0;
     
     ScanPec12(PEC12_A, PEC12_B, PEC12_PB);
@@ -89,36 +88,7 @@ void __ISR(_TIMER_1_VECTOR, ipl3AUTO) IntHandlerDrvTmrInstance0(void)
         APP_UpdateState(APP_STATE_SERVICE_TASKS);
     }
      BSP_LEDToggle(BSP_LED_1);
-
-//    //LED1_W = 1;  //Sert à prendre les mesures, mais peut être retiré pour le code final  
-//    static uint16_t i;
-//    static uint8_t compteur; 
-//    
-//    if (i >= 3000)
-//    {   
-//        APP_UpdateState (APP_STATE_SERVICE_TASKS);
-//    }
-//    else
-//    {
-//        APP_UpdateState (APP_STATE_WAIT);
-//        i++;
-//    }
-//    
-//    if(compteur < 9)
-//    {
-//        compteur++;
-//    }
-//    else
-//    {
-//        compteur = 0;
-
-//    }
-//
-//    
-//    
-//    ScanPec12(PEC12_A,PEC12_B,PEC12_PB);
-//        //LED1_W = 0; //Sert à prendre les mesures, mais peut être retiré pour le code final 
-
+     
     PLIB_INT_SourceFlagClear(INT_ID_0,INT_SOURCE_TIMER_1);
 }
 

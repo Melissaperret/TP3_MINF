@@ -58,7 +58,6 @@ void  GENSIG_Initialize(S_ParamGen *pParam)
 }
   
 
-
 //-------------------------------
 // Mise à jour de la periode d'échantillonage
 // Auteur: JAR, MPT
@@ -103,7 +102,7 @@ void    GENSIG_UpdateSignal(S_ParamGen *pParam)
      32, 35, 38, 41, 44, 47, 50};
 
     amplitude = pParam ->Amplitude / 100;
-    offset = pParam->Offset * -0.5;//on fait fois -1 car le - est pour inverser le signal. Sinon le sinus monte quand on mettait -5000 au lieu de descendre 
+    offset = pParam->Offset * -0.5;//on divise par -2, cela permet d'inverser le signal. Sinon le sinus monte quand on mettait -5000 au lieu de descendre 
     
     // Boucle pour le calcul de tous les échantillons
     for (nbEchantillon = 0; nbEchantillon < MAX_ECH ; nbEchantillon++)
@@ -113,7 +112,7 @@ void    GENSIG_UpdateSignal(S_ParamGen *pParam)
             case SignalSinus:
             {
                 // Calcul du sinus
-                tableauValeursSignal[nbEchantillon] = VAL_DIVISION_TENSION + offset + (tableauCourbeSinus[nbEchantillon]-50) * amplitude;
+                tableauValeursSignal[nbEchantillon] = MOITIE_AMPLITUDE + offset + (tableauCourbeSinus[nbEchantillon]-50) * amplitude;
             }
                 break; 
 
@@ -122,19 +121,19 @@ void    GENSIG_UpdateSignal(S_ParamGen *pParam)
                 // Calcul du triangle
                 if ((MAX_ECH * 0.5) > nbEchantillon)  //on fait pas directement divisé, car ça peut être couteux pour le uC
                     {
-                        tableauValeursSignal[nbEchantillon] = VAL_DIVISION_TENSION + offset + (amplitude *(2 * (nbEchantillon -25))); //amplitude en mV
+                        tableauValeursSignal[nbEchantillon] = MOITIE_AMPLITUDE + offset + (amplitude *(2 * (nbEchantillon -25))); //amplitude en mV
                     }
                 else 
                     {
 
-                        tableauValeursSignal[nbEchantillon] = VAL_DIVISION_TENSION + offset + (amplitude * (100 - 2 * (nbEchantillon-25)));
+                        tableauValeursSignal[nbEchantillon] = MOITIE_AMPLITUDE + offset + (amplitude * (100 - 2 * (nbEchantillon-25)));
                     }
             }   
                 break ; 
             case SignalDentDeScie:
             {
                 // Calcul de la dent de scie
-                tableauValeursSignal[nbEchantillon] = VAL_DIVISION_TENSION + (offset + (((nbEchantillon-50) * amplitude)));    
+                tableauValeursSignal[nbEchantillon] = MOITIE_AMPLITUDE + (offset + (((nbEchantillon-50) * amplitude)));    
             }
                 break; 
 
@@ -143,11 +142,11 @@ void    GENSIG_UpdateSignal(S_ParamGen *pParam)
                 // Calcul du carré
                 if ((MAX_ECH * 0.5) > nbEchantillon)  //*0.5 = division par 2
                     {
-                        tableauValeursSignal[nbEchantillon] = VAL_DIVISION_TENSION + ((amplitude * 0.5 * MAX_ECH)+ offset);
+                        tableauValeursSignal[nbEchantillon] = MOITIE_AMPLITUDE + ((amplitude * 0.5 * MAX_ECH)+ offset);
                     }
                  else 
                     {
-                        tableauValeursSignal[nbEchantillon] = VAL_DIVISION_TENSION - ((amplitude * 0.5 * MAX_ECH)- offset);
+                        tableauValeursSignal[nbEchantillon] = MOITIE_AMPLITUDE - ((amplitude * 0.5 * MAX_ECH)- offset);
                     }
             }
                 break; 
@@ -165,7 +164,7 @@ void    GENSIG_UpdateSignal(S_ParamGen *pParam)
         {
             tableauValeursSignal[nbEchantillon] = 0;
         }
-        // Transforme les valeur en volt
+        // Conversion pour passer de 10000 à 65535 
         tableauValeursSignal[nbEchantillon] = ((VAL_MAX_PAS * tableauValeursSignal[nbEchantillon])/10000);  
     }
 }

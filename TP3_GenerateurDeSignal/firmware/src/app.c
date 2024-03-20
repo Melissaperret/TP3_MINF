@@ -199,8 +199,6 @@ void APP_Tasks ( void )
        case APP_STATE_SERVICE_TASKS:
             // Toggle de la led 2
             BSP_LEDToggle(BSP_LED_2);
-
-            // Scan des boutons
             
             // Execution du menu
             MENU_Execute(&LocalParamGen);
